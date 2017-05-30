@@ -9,6 +9,7 @@ package hw7;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +20,10 @@ public class BSTreeTester {
 	private BSTree<Integer> tree1;
 	private BSTree<Integer> empty;
 	private ArrayList<Integer> list;
+	private BSTree<Integer> tree2;
+	private BSTree<Integer> com;
+	BSTree tree = new BSTree();
+	private ArrayList<Integer> result;
 	
 	
 	
@@ -26,13 +31,26 @@ public class BSTreeTester {
 	public void setup(){
 		tree1 = new BSTree<Integer>();
 		empty = new BSTree<Integer>();
+		tree2 = new BSTree<Integer>();
+		com = new BSTree<Integer>();
 		list = new ArrayList<Integer>();
+		result = new ArrayList<Integer>();
 		list.add(300);
 		
 		tree1.insert(300);tree1.insert(200);tree1.insert(400);		
 		tree1.insert(150);
 		tree1.insert(100);
 		tree1.insert(175);tree1.insert(176);
+		
+		tree2.insert(300);tree2.insert(100);
+		tree2.insert(20);
+		
+		
+		com.insert(10);
+		com.insert(8);
+		com.insert(12);		
+		com.insert(3);
+
 	}
 
 	@Test
@@ -117,7 +135,33 @@ public class BSTreeTester {
 	
 	@Test
 	public void testleaf(){
-		assertEquals("Check height",3,tree1.leafCount()) ;
+		assertEquals("Check leaf",3,tree1.leafCount()) ;
 	}
+	
+//	@Test
+//	public void testlevel(){
+//		assertEquals("Check level",2,tree1.levelCount(1)) ;
+//	}
+//	
+//	@Test
+//	public void testareCousins(){
+//		tree1.insert(450);
+//		assertEquals("Check areCousins",true,tree1.areCousins(150,450)) ;
+//	}
+//	@Test
+//	public void testcomplete(){
+//		assertEquals("Check isComplete",false,tree1.isCompleteBST()) ;
+//		assertEquals("Check isComplete",true,com.isCompleteBST());
+//
+//	}
+	
+//	@Test
+//	public void testtwotrees(){
+//		result.add(100);
+//		result.add(300);
+//		BSTree_Iterator ite1 = (BSTree_Iterator) tree1.iterator();
+//		BSTree_Iterator ite2 = (BSTree_Iterator) tree2.iterator();
+//		assertEquals("Check two trees",result,tree.intersection(ite1,ite2)) ;
+//	}
 
 }

@@ -8,8 +8,10 @@ package hw7;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
+import java.util.Queue;
 import java.util.Stack;
 
 public class BSTree<T extends Comparable<? super T>>{
@@ -210,7 +212,7 @@ public class BSTree<T extends Comparable<? super T>>{
 			 }
 		 }
 		 else{
-			 System.out.println("The key " + key + " is already in the tree.");
+			 return;
 		 }
 		 
 	 }
@@ -321,7 +323,8 @@ public class BSTree<T extends Comparable<? super T>>{
 
 		    if (lefth > righth) {
 		        return lefth + 1;
-		    } else {
+		    } 
+		    else {
 		        return righth + 1;
 		    }
 	 }
@@ -333,8 +336,7 @@ public class BSTree<T extends Comparable<? super T>>{
 	 public int leafCount(){
 		 return leafhealper(root);
 	 }
-	 private int leafhealper(BSTNode node) 
-	    {
+	 private int leafhealper(BSTNode node){
 	        if (node == null)
 	            return 0;
 	        if (node.left == null && node.right == null)
@@ -342,7 +344,130 @@ public class BSTree<T extends Comparable<? super T>>{
 	        else
 	            return leafhealper(node.left) + leafhealper(node.right);
 	    }
+	 
+	 public ArrayList<T> intersection(BSTree_Iterator iter1, BSTree_Iterator iter2){
+		 ArrayList<T> tree1 = new ArrayList<T>();
+		 ArrayList<T> tree2 = new ArrayList<T>();
+		 ArrayList<T> result = new ArrayList<T>();
+		 
+		 while(iter1.hasNext()){
+			 tree1.add(iter1.next());
+		 }
+		 while(iter2.hasNext()){
+			 tree2.add(iter2.next());
+		 }
+		 for(int i = 0;i<tree1.size();i++){
+			 for(int j = 0; j<tree2.size();j++){
+				 if(tree1.get(i).equals(tree2.get(j))){
+					 result.add(tree2.get(j));
+				 }
+			 }
+		 }
+		 return result;
+	 }
+	 
+	 public int levelCount(int level){
+		 return getCAL(root,0,level);
 
+	 }
+	 int getCAL (BSTNode node, int curr, int level) {
+		    if (node == null) return 0;
+		    if (curr == level) return 1;
+		    return getCAL (node.getLeft(),  curr+1, level) +
+		           getCAL (node.getRight(), curr+1, level);
+		}
+
+	 public boolean areCousins(T n1, T n2){
+		 return this.isCousin(root, this.get(n1), this.get(n2));
+	 }
+	 private BSTNode get(T key){
+		 if(this.findKey(key)){
+			 return found;
+		 }
+		 else{
+			 return null;
+		 }
+	 }
+	 private boolean isSibling(BSTNode node, BSTNode a, BSTNode b)
+	    {
+	        // Base case
+	        if (node == null)
+	            return false;
+	 
+	        return ((node.left == a && node.right == b) ||
+	                (node.left == b && node.right == a) ||
+	                isSibling(node.left, a, b) ||
+	                isSibling(node.right, a, b));
+	    }
+	 
+	    // Recursive function to find level of Node 'ptr' in
+	    // a binary tree
+	 private int level(BSTNode node, BSTNode ptr, int lev)
+	    {
+	        // base cases
+	        if (node == null)
+	            return 0;
+	 
+	        if (node == ptr)
+	            return lev;
+	 
+	        // Return level if Node is present in left subtree
+	        int l = level(node.left, ptr, lev + 1);
+	        if (l != 0)
+	            return l;
+	 
+	        // Else search in right subtree
+	        return level(node.right, ptr, lev + 1);
+	    }
+	 
+	    // Returns 1 if a and b are cousins, otherwise 0
+	 private  boolean isCousin(BSTNode node, BSTNode a, BSTNode b)
+	    {
+	        // 1. The two Nodes should be on the same level
+	        //       in the binary tree.
+	        // 2. The two Nodes should not be siblings (means
+	        //    that they should not have the same parent
+	        //    Node).
+	        return ((level(node, a, 1) == level(node, b, 1)) &&
+	                (!isSibling(node, a, b)));
+	    }
+	 
+	 
+	 
+	 
+	 
+	 public boolean isCompleteBST(){
+		 return this.isComplete(root, 0, this.countNodes(root));
+	 }
+	 private int countNodes(BSTNode root) 
+	    {
+	        if (root == null)
+	            return 0;
+	        return (1 + countNodes(root.getLeft()) + countNodes(root.getRight()));
+	    }
+	 private boolean isComplete(BSTNode root, int index, int number_nodes)
+	    {
+	        // An empty tree is complete
+	        if (root == null)        
+	           return true;
+	  
+	        // If index assigned to current node is more than
+	        // number of nodes in tree, then tree is not complete
+	        if (index >= number_nodes)
+	           return false;
+	  
+	        // Recur for left and right subtrees
+	        return (isComplete(root.getLeft(), 2 * index + 1, number_nodes)
+	            && isComplete(root.getRight(), 2 * index + 2, number_nodes));
+	  
+	    }
+	 
+	 
+	 
+	 
+	 
+	 
+	 
 	 /**
 	  * return iterator
 	  * @return return iterator

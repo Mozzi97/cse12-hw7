@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class SearchEngine {
+public class SearchEngine{
 
 	/*Populate a BST from a file
 	 * @param searchTree - BST to be populated
@@ -30,10 +30,9 @@ public class SearchEngine {
 				String document = scanner.nextLine().trim();
 				String keywords[] = scanner.nextLine().split(" ");
 				
-				BSTree<String> BSTree = new BSTree<String>();
 				for(int i = 0;i<keywords.length;i++){
-					BSTree.insert(keywords[i]);
-					BSTree.insertInformation(keywords[i], document);
+					searchTree.insert(keywords[i]);
+					searchTree.insertInformation(keywords[i], document);
 				}
 			}
 			scanner.close();
@@ -50,8 +49,54 @@ public class SearchEngine {
 	 * @param fileName - query string
 	 */
 	public static void searchMyQuery(BSTree<String> searchTree, String query) {
+
+		ArrayList<String> list = new ArrayList<String>();
+		ArrayList<String> keys = new ArrayList<String>();
+		ArrayList<String> repeat = new ArrayList<String>();
+		//add keywords to list
+		String[] parts = query.split(" ");
+		for(int i = 0;i<parts.length;i++){
+			keys.add(parts[i].toLowerCase());
+		}
 		
-		//TODO
+	
+		//print the doc which contains every keyword
+		if(keys.size()!=1){
+			if(searchTree.findKey(keys.get(0))){
+				repeat.addAll(searchTree.findMoreInformation(keys.get(0)));
+			}
+		for(int i = 1; i<keys.size();i++){
+			if(!searchTree.findKey(keys.get(i))){
+				repeat.clear();
+				continue;
+			}
+			else{
+				repeat.retainAll(searchTree.findMoreInformation(keys.get(i)));
+
+			}
+		}
+
+		print(query,repeat);
+		}
+		
+		
+		for(int i = 0; i<keys.size();i++){
+			if(!searchTree.findKey(keys.get(i))){
+				print(keys.get(i),null);
+			}
+			else{
+				
+				searchTree.findMoreInformation(keys.get(i)).removeAll(repeat);
+
+				if(searchTree.findMoreInformation(keys.get(i)).isEmpty()){
+					return;
+				}
+				else{
+					print(keys.get(i),searchTree.findMoreInformation(keys.get(i)));
+					repeat.addAll(searchTree.findMoreInformation(keys.get(i)));
+				}
+			}
+		}
 	}
 	
 	/*Print method 
@@ -60,6 +105,7 @@ public class SearchEngine {
 	 */
 	 
 	public static void print(String query, ArrayList<String> documents) {
+		
 		if(documents==null || documents.isEmpty())
 			System.out.println("The search yielded no results for "+query);
 		else {
